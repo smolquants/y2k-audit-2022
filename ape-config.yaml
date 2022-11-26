@@ -1,0 +1,4 @@
+name: y2k-audit-2022-11
+
+plugins:
+  - name: notebook
