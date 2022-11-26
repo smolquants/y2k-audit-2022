@@ -171,7 +171,7 @@ for borrow caps on [Abracadbra](https://abracadabra.money/markets/) being faully
 
 **Mitigations for this attack:**
 - Caps on Y2K risk vault deposits as a function of liquidity in Curve pool, enforcing PnL < 0 for attack (issue here is Curve liquidity can change during deposit period)
-- Recommended conservative cap on MIM risk vault is ~ $1.92M, given existing Curve MIM pool conditions (as of 2022-11-26). Conservative as it assumes worst-case scenario with Chainlink (simply forwarding Curve price)
+- Rough numbers for conservative cap on MIM risk vault is around ~ $1.92M (*TODO: check and move away from rough*), given existing Curve MIM pool conditions (as of 2022-11-26). Conservative as it assumes worst-case scenario with Chainlink (simply forwarding Curve price)
 - Should monitor CDP caps on MIM in the event of new large loans being offered by Abracadbra as the larger the caps on Abracadabra, the more likely this manipulation attack can be executed
 - Further, fix Y2K premium pricing mechanism (i.e. significant slippage for larger put option size)
 
