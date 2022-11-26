@@ -2,3 +2,10 @@ name: y2k-audit-2022-11
 
 plugins:
   - name: notebook
+
+default_ecosystem: ethereum
+
+ethereum:
+  default_network: mainnet
+  mainnet:
+    default_provider: alchemy
