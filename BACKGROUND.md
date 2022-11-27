@@ -118,7 +118,7 @@ A * n**n * sum_i x_i + D = A * D * n**n + D**(n+1) / (n**n * prod_i x_i)
 
 ![Stableswap price chart](assets/stableswap-price.png)
 
-[Curve marginal slippage chart (x, S(x))](https://www.desmos.com/calculator/harfskir6i)
+[Curve marginal slippage chart (x, S(x))](https://www.desmos.com/calculator/ruj2cgyfu1)
 
 ![Stableswap slippage chart](assets/stableswap-slippage.png)
 
