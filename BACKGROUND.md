@@ -146,7 +146,7 @@ From the simple [Curve MIM metapool plots](https://www.desmos.com/calculator/mrv
 one can see the strike price of `K = 0.9759` will be breached when approximately 96.5% of the pool is composed of MIM.
 
 Will conservatively estimate the attack ignoring any buffers placed by Chainlink. Since their docs are rather opaque, seems safer to simply assume
-they relay the price directly from Curve, particularly given 63.72% of MIM supply is in the Curve pool anyway. Tuning Y2K risk parameters under
+they relay the price directly from Curve (but excluding flash loan manipulations), particularly given 63.72% of MIM supply is in the Curve pool anyway. Tuning Y2K risk parameters under
 these more conservative assumptions (i.e. assuming worst case for Chainlink), means robustness in the event price manipulation attack does happen
 regardless of unknown Chainlink procedures.
 
@@ -158,20 +158,20 @@ For a MIM price = 0.9998943101028948.
 
 **Some rough numbers below:**
 
-To reach the strike of 0.9759 given current `A = 2000`, the pool must be composed of ~96.5% MIM. For a current `D = 98.3823M`,
+To reach the strike of 0.9759 given current `A = 2000`, the pool must be composed of ~96.5% MIM. For a current `D = 98.3823M` and balances above,
 need to sell approximately 40M of MIM into the pool to breach strike price. Can confirm via [UI](https://curve.fi/#/ethereum/pools/mim/swap).
 
 Worst case slippage on 40M MIM would be `2 * (1 - 0.976) = 0.048` or 4.8% on the 40M, which is 1.92M as a loss due to slippage (factor of 2 due to sell then buy back). 
 Would then need Y2K payout less premium fees to be >= 1.92M to make this manipulation even worth it to explore (ignoring ETH -> stablecoin slippage on Y2K payout).
 MIM risk vaults currently have deposits [of > $2.258M](https://dune.com/queries/1503953/2532529), so this attack would be possible if not
-for borrow caps on [Abracadbra](https://abracadabra.money/markets/) being faully exhausted.
+for borrow caps on [Abracadbra](https://abracadabra.money/markets/) being fully exhausted.
 
-*WARNING: must monitor CDP caps on MIM and loan amounts to confidently offer MIM puts*
+*WARNING: must monitor CDP caps on MIM, loan amounts, and liquidity on Curve through expiry to confidently offer MIM puts*
 
 
 **Mitigations for this attack:**
-- Caps on Y2K risk vault deposits as a function of liquidity in Curve pool, enforcing PnL < 0 for attack (issue here is Curve liquidity can change during deposit period)
-- Rough numbers for conservative cap on MIM risk vault is around ~ $1.92M (*TODO: check and move away from rough*), given existing Curve MIM pool conditions (as of 2022-11-26). Conservative as it assumes worst-case scenario with Chainlink (simply forwarding Curve price)
+- Caps on Y2K risk vault deposits as a function of liquidity in Curve pool, enforcing PnL < 0 for attack based on existing Curve liquidity conditions: issue here is Curve liquidity can change. Attacker needs to buy the Y2K put prior to Curve pool manipulation, so preventing "risk-free" profitable attack should likely be tuned based on Curve pool balances through deposit period end
+- Rough numbers for conservative cap on MIM risk vault is around ~ $1.92M (*TODO: check and move away from rough*), **given existing Curve MIM pool conditions (as of 2022-11-26).** Conservative as it assumes worst-case scenario with Chainlink (simply forwarding Curve price without ability to influence with flash loans)
 - Should monitor CDP caps on MIM in the event of new large loans being offered by Abracadbra as the larger the caps on Abracadabra, the more likely this manipulation attack can be executed
 - Further, fix Y2K premium pricing mechanism (i.e. significant slippage for larger put option size)
 

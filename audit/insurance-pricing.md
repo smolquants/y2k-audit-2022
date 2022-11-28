@@ -1,4 +1,4 @@
-# insurance pricing
+# Insurance Pricing
 
 Insurance pricing mechanism analysis.
 
