@@ -14,6 +14,7 @@ Install [ape](https://github.com/ApeWorX/ape)
 
 ```sh
 pipx install eth-ape
+pipx runpip eth-ape install matplotlib
 ape plugins install .
 ```
 
