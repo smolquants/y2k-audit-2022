@@ -1,11 +1,17 @@
 name: y2k-audit-2022-11
 
 plugins:
+  - name: alchemy
+  - name: foundry
   - name: notebook
 
 default_ecosystem: ethereum
 
 ethereum:
-  default_network: mainnet
-  mainnet:
-    default_provider: alchemy
+  default_network: mainnet-fork
+
+foundry:
+  fork:
+    ethereum:
+      mainnet:
+        upstream_provider: alchemy
