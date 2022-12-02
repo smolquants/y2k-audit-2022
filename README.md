@@ -41,3 +41,9 @@ To run the scripts, install hardhat locally in the repo:
 ```sh
 npm install --save-dev hardhat
 ```
+
+and compile the needed mock contracts
+
+```sh
+ape compile --size
+```

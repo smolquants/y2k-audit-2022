@@ -5,6 +5,7 @@ plugins:
   - name: hardhat
   - name: notebook
   - name: solidity
+  - name: vyper
 
 default_ecosystem: ethereum
 
