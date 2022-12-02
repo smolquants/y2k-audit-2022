@@ -18,8 +18,26 @@ pipx runpip eth-ape install matplotlib
 ape plugins install .
 ```
 
-and launch notebook
+Setup your environment with an [Alchemy](https://www.alchemy.com) key
+
+```sh
+export WEB3_ALCHEMY_PROJECT_ID=<YOUR_PROJECT_ID>
+```
+
+Then launch `ape-notebook`
 
 ```sh
 ape notebook
+```
+
+## Scripts
+
+The scripts to verify results from notebooks using mock tokens
+and pools rely on the [`ape-hardhat`](https://github.com/ApeWorX/ape-hardhat)
+mainnet-fork functionality.
+
+To run the scripts, install hardhat locally in the repo:
+
+```sh
+npm install --save-dev hardhat
 ```

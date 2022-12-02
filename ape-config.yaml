@@ -2,16 +2,28 @@ name: y2k-audit-2022-11
 
 plugins:
   - name: alchemy
-  - name: foundry
+  - name: hardhat
   - name: notebook
+  - name: solidity
 
 default_ecosystem: ethereum
 
 ethereum:
   default_network: mainnet-fork
+  mainnet_fork:
+    default_provider: hardhat
 
-foundry:
+hardhat:
   fork:
     ethereum:
       mainnet:
         upstream_provider: alchemy
+
+dependencies:
+  - name: OpenZeppelin
+    github: OpenZeppelin/openzeppelin-contracts
+    version: 4.8.0
+
+solidity:
+  import_remapping:
+    - "@openzeppelin=OpenZeppelin/4.8.0"
