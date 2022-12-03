@@ -2,6 +2,7 @@ name: y2k-audit-2022-11
 
 plugins:
   - name: alchemy
+  - name: etherscan
   - name: hardhat
   - name: notebook
   - name: solidity
