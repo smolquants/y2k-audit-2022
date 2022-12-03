@@ -90,6 +90,25 @@ def mint_liquidity_to_mock_pool(
     mock_pool.add_liquidity([amount0, amount1], 0, sender=acc)
 
 
+def get_marginal_price(
+    mock_pool: ContractInstance,
+    i: int,
+    j: int,
+) -> float:
+    """
+    Returns the current marginal price for the pool in units
+    of <j> / <i> (as if selling i for j).
+
+    j is the base, i is the quote.
+    """
+    dx = int(1e18)
+    fee_rate = mock_pool.fee() / 10**10
+    price_less_fees = mock_pool.get_dy(i, j, dx) / dx
+
+    # return price prior to fee application
+    return price_less_fees / (1 - fee_rate)
+
+
 def main():
     """
     Deploys a new Curve pool using mock tokens to simulate
@@ -129,6 +148,11 @@ def main():
         actual_pool, base_pool, mock_pool, mock_token0, mock_token1, acc
     )
     click.echo(f"Curve pool minted {mock_lp.balanceOf(acc)} LP tokens to acc.")
+
+    # get the current marginal price of pool at init
+    # PRICE = <USD> / <MIM>
+    price0 = get_marginal_price(mock_pool, 0, 1)
+    click.echo(f"Marginal price of the pool prior to swap: {price0}")
 
     # TODO: check mock_pool.get_dy and do the actual swap to test slippage
     # TODO: and marginal price changes
