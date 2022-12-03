@@ -1,6 +1,7 @@
-from ape import Contract, accounts
+import click
+
+from ape import Contract, accounts, project
 from ape.contracts import ContractInstance
-from ape.project import MockStableSwapPool, MockToken
 from ape.api.accounts import AccountAPI
 
 
@@ -17,7 +18,7 @@ def deploy_mock_token(
     symbol: str,
     acc: AccountAPI,
 ) -> ContractInstance:
-    return MockToken.deploy(name, symbol, sender=acc)
+    return project.MockToken.deploy(name, symbol, sender=acc)
 
 
 def deploy_mock_pool(
@@ -33,7 +34,7 @@ def deploy_mock_pool(
     A = actual_pool.A()
     fee = actual_pool.fee()
     admin_fee = actual_pool.admin_fee()
-    return MockStableSwapPool.deploy(
+    return project.MockStableSwapPool.deploy(
         acc.address,  # make sender the owner
         [mock_token0.address, mock_token1.address],
         mock_lp.address,
@@ -77,6 +78,7 @@ def mint_liquidity_to_mock_pool(
     mock_token1.mint(acc, amount1, sender=acc)
 
     # add the minted liquidity
+    # TODO: fix
     receipt = mock_pool.add_liquidity([amount0, amount1], 0, sender=acc)
     return receipt.return_value
 
@@ -99,11 +101,13 @@ def main():
     base_pool = crv3_curve_pool()
 
     # mock ERC20 tokens needed for pool
+    click.echo("Deploying mock tokens ...")
     mock_token0 = deploy_mock_token("Mock MIM", "MMIM", acc)
     mock_token1 = deploy_mock_token("Mock USD", "MUSD", acc)
     mock_lp = deploy_mock_token("Mock LP", "MLP", acc)
 
     # deploy mock curve pool
+    click.echo("Deploying mock pool ...")
     mock_pool = deploy_mock_pool(
         actual_pool,
         mock_token0,
@@ -113,6 +117,7 @@ def main():
     )
 
     # add liquidity in proportion to mim pool
+    click.echo("Adding minted liquidity to mock pool ...")
     minted_lp_amount = mint_liquidity_to_mock_pool(
         actual_pool,
         base_pool,
@@ -122,6 +127,12 @@ def main():
         acc
     )
     assert minted_lp_amount == mock_lp.balanceOf(acc)
+
+    click.echo("mock_pool.balances:", [mock_pool.balances(i) for i in range(2)])
+    click.echo("token.balanceOf(mock_pool):", [
+        mock_token0.balanceOf(mock_pool),
+        mock_token1.balanceOf(mock_pool),
+    ])
 
     # TODO: check mock_pool.get_dy and do the actual swap to test slippage
     # TODO: and marginal price changes
