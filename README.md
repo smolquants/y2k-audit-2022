@@ -14,7 +14,8 @@ Install dependencies with [`hatch`](https://github.com/pypa/hatch) and [`ape`](h
 
 ```sh
 hatch build
-hatch run ape plugins install .
+hatch shell
+(y2k-audit-2022-11) $ ape plugins install .
 ```
 
 Setup your environment with an [Alchemy](https://www.alchemy.com) key
@@ -26,16 +27,15 @@ export WEB3_ALCHEMY_PROJECT_ID=<YOUR_PROJECT_ID>
 Then launch [`ape-notebook`](https://github.com/ApeWorX/ape-notebook)
 
 ```sh
-hatch run ape notebook
+(y2k-audit-2022-11) $ ape notebook
 ```
 
 ## Scripts
 
-The scripts to verify results from notebooks using mock tokens
-and pools rely on the [`ape-hardhat`](https://github.com/ApeWorX/ape-hardhat)
-mainnet-fork functionality.
+Scripts using mock tokens and pools rely on [`ape-hardhat`](https://github.com/ApeWorX/ape-hardhat)
+mainnet-fork functionality. These verify results estimated in the notebooks.
 
-To run the scripts, install hardhat locally in the repo:
+To run, install hardhat locally in the repo:
 
 ```sh
 npm install --save-dev hardhat
@@ -44,5 +44,12 @@ npm install --save-dev hardhat
 and compile the needed mock contracts
 
 ```sh
-hatch run ape compile --size
+hatch shell
+(y2k-audit-2022-11) $ ape compile --size
+```
+
+Then e.g. run the Curve manipulation script
+
+```sh
+(y2k-audit-2022-11) $ ape run curve_manipulation
 ```
