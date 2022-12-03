@@ -52,7 +52,7 @@ def mint_liquidity_to_mock_pool(
     mock_token0: ContractInstance,
     mock_token1: ContractInstance,
     acc: AccountAPI,
-) -> int:
+):
     """
     Mints liquidity to the mock pool replicating liquidity
     in the actual metapool.
@@ -68,19 +68,27 @@ def mint_liquidity_to_mock_pool(
     base_lp_total_supply = Contract(actual_pool.coins(1)).totalSupply()
 
     # calculate USD balance in base pool assuming actual is a meta pool
+    mock_token1_decimals = mock_token1.decimals()
     amount1 = 0
     for i in range(3):
-        amount1 += (base_pool.balances(i) * amount_base_lp) \
+        coin_decimals = Contract(base_pool.coins(i)).decimals()
+        factor = 10**(mock_token1_decimals - coin_decimals)
+        amount1 += (base_pool.balances(i) * amount_base_lp * factor) \
             // base_lp_total_supply
 
     # mint token amounts to acc prior to adding liquidity to mock pool
     mock_token0.mint(acc, amount0, sender=acc)
     mock_token1.mint(acc, amount1, sender=acc)
 
+    # approve mock pool to transfer coins
+    mock_token0.approve(mock_pool.address, 2**256-1, sender=acc)
+    mock_token1.approve(mock_pool.address, 2**256-1, sender=acc)
+
     # add the minted liquidity
-    # TODO: fix
-    receipt = mock_pool.add_liquidity([amount0, amount1], 0, sender=acc)
-    return receipt.return_value
+    click.echo(
+        f"Adding balances=[{amount0}, {amount1}] of liquidity to pool ..."
+    )
+    mock_pool.add_liquidity([amount0, amount1], 0, sender=acc)
 
 
 def main():
@@ -117,8 +125,8 @@ def main():
     )
 
     # add liquidity in proportion to mim pool
-    click.echo("Adding minted liquidity to mock pool ...")
-    minted_lp_amount = mint_liquidity_to_mock_pool(
+    click.echo("Minting liquidity to mock pool ...")
+    mint_liquidity_to_mock_pool(
         actual_pool,
         base_pool,
         mock_pool,
@@ -126,13 +134,7 @@ def main():
         mock_token1,
         acc
     )
-    assert minted_lp_amount == mock_lp.balanceOf(acc)
-
-    click.echo("mock_pool.balances:", [mock_pool.balances(i) for i in range(2)])
-    click.echo("token.balanceOf(mock_pool):", [
-        mock_token0.balanceOf(mock_pool),
-        mock_token1.balanceOf(mock_pool),
-    ])
+    click.echo(f"Curve pool minted {mock_lp.balanceOf(acc)} LP tokens to acc.")
 
     # TODO: check mock_pool.get_dy and do the actual swap to test slippage
     # TODO: and marginal price changes
