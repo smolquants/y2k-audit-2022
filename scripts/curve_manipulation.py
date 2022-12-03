@@ -41,7 +41,7 @@ def deploy_mock_pool(
         A,
         fee,
         admin_fee,
-        sender=acc
+        sender=acc,
     )
 
 
@@ -72,22 +72,21 @@ def mint_liquidity_to_mock_pool(
     amount1 = 0
     for i in range(3):
         coin_decimals = Contract(base_pool.coins(i)).decimals()
-        factor = 10**(mock_token1_decimals - coin_decimals)
-        amount1 += (base_pool.balances(i) * amount_base_lp * factor) \
-            // base_lp_total_supply
+        factor = 10 ** (mock_token1_decimals - coin_decimals)
+        amount1 += (
+            base_pool.balances(i) * amount_base_lp * factor
+        ) // base_lp_total_supply
 
     # mint token amounts to acc prior to adding liquidity to mock pool
     mock_token0.mint(acc, amount0, sender=acc)
     mock_token1.mint(acc, amount1, sender=acc)
 
     # approve mock pool to transfer coins
-    mock_token0.approve(mock_pool.address, 2**256-1, sender=acc)
-    mock_token1.approve(mock_pool.address, 2**256-1, sender=acc)
+    mock_token0.approve(mock_pool.address, 2**256 - 1, sender=acc)
+    mock_token1.approve(mock_pool.address, 2**256 - 1, sender=acc)
 
     # add the minted liquidity
-    click.echo(
-        f"Adding balances=[{amount0}, {amount1}] of liquidity to pool ..."
-    )
+    click.echo(f"Adding balances=[{amount0}, {amount1}] of liquidity to pool")
     mock_pool.add_liquidity([amount0, amount1], 0, sender=acc)
 
 
@@ -121,18 +120,13 @@ def main():
         mock_token0,
         mock_token1,
         mock_lp,
-        acc
+        acc,
     )
 
     # add liquidity in proportion to mim pool
     click.echo("Minting liquidity to mock pool ...")
     mint_liquidity_to_mock_pool(
-        actual_pool,
-        base_pool,
-        mock_pool,
-        mock_token0,
-        mock_token1,
-        acc
+        actual_pool, base_pool, mock_pool, mock_token0, mock_token1, acc
     )
     click.echo(f"Curve pool minted {mock_lp.balanceOf(acc)} LP tokens to acc.")
 

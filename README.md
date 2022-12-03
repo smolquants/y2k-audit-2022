@@ -10,12 +10,11 @@ To check the results, clone the repo
 git clone https://github.com/smolquants/y2k-audit-2022-11.git
 ```
 
-Install [ape](https://github.com/ApeWorX/ape)
+Install dependencies with [`hatch`](https://github.com/pypa/hatch) and [`ape`](https://github.com/ApeWorX/ape)
 
 ```sh
-pipx install eth-ape
-pipx runpip eth-ape install matplotlib
-ape plugins install .
+hatch build
+hatch run ape plugins install .
 ```
 
 Setup your environment with an [Alchemy](https://www.alchemy.com) key
@@ -24,10 +23,10 @@ Setup your environment with an [Alchemy](https://www.alchemy.com) key
 export WEB3_ALCHEMY_PROJECT_ID=<YOUR_PROJECT_ID>
 ```
 
-Then launch `ape-notebook`
+Then launch [`ape-notebook`](https://github.com/ApeWorX/ape-notebook)
 
 ```sh
-ape notebook
+hatch run ape notebook
 ```
 
 ## Scripts
@@ -45,5 +44,5 @@ npm install --save-dev hardhat
 and compile the needed mock contracts
 
 ```sh
-ape compile --size
+hatch run ape compile --size
 ```
