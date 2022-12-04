@@ -67,6 +67,10 @@ back due to insignificant liquidity on other major DEXs and CEXs. This should al
 *any* oracle reporting MIM price due to the significant concentration of circulating supply
 in the Curve pool, regardless of the buffers put in place.
 
+**NOTE:** The analysis around Curve pool manipulation below will take a conservative approach and assume the worst-case
+scenario of the Chainlink oracle relaying price directly from the Curve pool (but no flashloan attacks),
+as Chainlink docs can be opaque w.r.t. MIM.
+
 
 ## Manipulating the Curve Pool to Trigger Depegs
 
@@ -128,11 +132,7 @@ uses the context from the prior section. Using parameters from the MIM Curve met
 
 ![StableSwap depeg chart](../assets/stableswap-depeg.png)
 
-shows the pool breaks below the Y2K strike price roughly when MIM makes up ~96.5% of the pool balances.
-
-Note that the analysis around Curve pool manipulation takes a conservative approach and assumes the worst-case
-scenario of the Chainlink oracle relaying price directly from the Curve pool (but no flashloan attacks),
-as Chainlink docs can be opaque w.r.t. MIM.
+roughly shows the pool breaks below the Y2K strike price when MIM makes up ~96.5% of the pool balances.
 
 ### Cost of Attack
 
