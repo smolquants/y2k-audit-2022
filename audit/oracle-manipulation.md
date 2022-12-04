@@ -77,7 +77,7 @@ are pools paired with an underlying base pool's LP token. In the case of MIM, th
 base pool is the Curve [3pool](https://curve.fi/#/ethereum/pools/3pool/swap)
 composed of DAI, USDC, and USDT.
 
-Some notes on Curve V1 pools are provided [here](https://curve.fi/#/ethereum/pools/3pool/swap)
+Some notes on Curve V1 pools are provided [here](https://hackmd.io/@fmrmf/B17f2lTLo)
 for context. The general takeaway is the Curve pool acts like a [superposition](https://www.desmos.com/calculator/zye4mzkim0)
 of a constant product pool $\prod_i x_i = (D / n)^n$ with a constant sum pool $\sum_i x_i = D$.
 
@@ -87,6 +87,9 @@ $P_{ij} = -dx_i / dx_j$ flattens out
 
 ![StableSwap price chart](../assets/stableswap-price.png)
 
+Green is marginal price $P(x)$ as a function of $x$ reserves, orange-dotted is the Curve invariant plotted w.r.t. coin balances $(x, y)$.
+Only looking at the two-coin case for simplicity.
+
 The tradeoff made by the Curve pool is significantly less slippage when reserves are balanced,
 but extreme slippage once significant imbalance occurs (i.e. price goes to zero rapidly). This is
 easiest to see from the [marginal slippage chart](https://www.desmos.com/calculator/ruj2cgyfu1)
@@ -94,7 +97,9 @@ $S_{ij} = -dP_{ij}/dx_j$
 
 ![StableSwap slippage chart](../assets/stableswap-slippage.png)
 
-where slippage is near zero when balanced, but increases rapidly as imbalance occurs.
+Red is marginal slippage $S(x)$ as a function of $x$ reserves, green-dotted is the marginal price, orange-dotted is the Curve invariant.
+
+Slippage is near zero when balanced, but increases rapidly as imbalance occurs.
 
 ### Attacking The Curve Pool
 
@@ -118,9 +123,14 @@ PnL for attack = Y2K payout - Y2K premium - Slippage on Curve
 ```
 
 where the calculation for how much the attacker loses to slippage on Curve
-uses the context from the prior section.
+uses the context from the prior section. Using parameters from the MIM Curve metapool
+[in this plot](https://www.desmos.com/calculator/mrvj4vjixu) as an estimate
 
-Note that this analysis will take a conservative approach and assume the worst-case
+![StableSwap depeg chart](../assets/stableswap-depeg.png)
+
+shows the pool breaks below the Y2K strike price roughly when MIM makes up ~96.5% of the pool balances.
+
+Note that the analysis around Curve pool manipulation takes a conservative approach and assumes the worst-case
 scenario of the Chainlink oracle relaying price directly from the Curve pool (but no flashloan attacks),
 as Chainlink docs can be opaque w.r.t. MIM.
 
