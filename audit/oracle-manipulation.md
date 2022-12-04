@@ -3,6 +3,20 @@
 Oracle manipulation analysis.
 
 
+## TL;DR
+
+- ~62% of MIM circulating supply and the majority of liquidity for the token
+is in the MIM Curve metapool
+- Meaning, price discovery should occur solely through this lone pool, making it an easy target for price manipulation
+- An attacker could purchase a Y2K put on MIM, mint MIM through Abracadabra, sell into the Curve pool to trigger a depeg,
+collect on Y2K and repay the MIM loan
+- Upfront capital required to execute this attack is ~52M USD given current liquidity conditions on the MIM Curve metapool
+- Slippage lost on Curve, however, would only be ~230K USD
+- The attack is **not** currently possible due to borrow caps on Abracadabra being fully exhausted
+- Y2K should consider implementing caps on risk vault deposits at or near this Curve slippage loss amount
+to completely eliminate the profitability of this attack in the event Abracadabra increases new borrows in the future
+
+
 ## Background
 
 Y2K currently offers binary option markets on depeg events for the stablecoins
@@ -107,7 +121,7 @@ Slippage is near zero when balanced, but increases rapidly as imbalance occurs.
 
 ### Attacking The Curve Pool
 
-An attacker could use the Curve MIM metapool to manipulate the price of MIM vs USD
+An attacker could use the MIM Curve metapool to manipulate the price of MIM vs USD
 in their favor, so as to trigger a depeg event on the MIM Y2K binary put oracle.
 The oracle manipulation attack goes as follows:
 
@@ -136,7 +150,64 @@ roughly shows the pool breaks below the Y2K strike price when MIM makes up ~96.5
 
 ### Cost of Attack
 
+Cost of attack for manipulating the MIM Curve metapool is the minimum amount of upfront MIM capital needed
+to sell into the pool for the price on Curve to dip below the Y2K strike of `K=0.9759`.
 
+This can be found by inverting the marginal price function $x = P^{-1}(P)$ and taking the delta
+between the current price $P_0$ and the target strike price $K$
+
+```math
+\Delta x = P^{-1}(K) - P^{-1}(P_0)
+```
+
+where $x$ is in units of MIM.
+
+Since Curve math isn't super nice to work with, an easier approach taken in the provided
+[oracle manipulation notebook](../notebook/oracle-manipulation.ipynb) is to simply try many values
+for $\Delta x$ in the known function $P(x + \Delta x)$ until the output is very near to the strike price.
+
+To be even more rigorous, the provided [oracle manipulation script](../scripts/curve_manipulation.py)
+deploys in mainnet-fork a new mock Curve V1 pool with the current MIM metapool parameters. Mock tokens are minted
+to this pool to replicate the current liquidity conditions in the actual metapool. The script
+generates in a [csv file](../scripts/results/curve_manipulation.csv) the results of executing this attack against
+the mock pool for various input sizes sold into the pool. To run, execute from the base directory
+
+```sh
+hatch run ape run curve_manipulation
+```
+
+As of 2022-12-04,
+
+- **~47M MIM mint via Abracadabra** is required to manipulate the Curve pool to the strike price of 0.9759
+- **>52M USD of upfront collateral for CDP** assuming a maximum collateral ratio of 90% for cauldron of choice
+- **~230K MIM is lost to slippage** from executing the attack
+
+Any payout from Y2K less fees and premium that is greater than ~230k USD will make this attack worthwhile to try.
+Though, there are inherent risks in whether or not the Chainlink oracle relays the price post-swap as well as arbs.
 
 
 ## Mitigating Curve Pool Attacks
+
+Y2K MIM risk vaults currently have deposits [of > $2.258M](https://dune.com/queries/1503953/2532529), so this attack would be potentially profitable if not
+for borrow caps on [Abracadabra](https://abracadabra.money/markets/) being fully exhausted.
+
+Mitigations for this attack that Y2K should consider are below.
+
+### Caps on Y2K Risk Vault Deposits
+
+Caps on Y2K risk vault deposits as a function of current liquidity in the Curve pool would enforce PnL < 0 for this attack
+by limiting the maximum payout the attacker would receive from Y2K. Given current conditions,
+this risk vault cap on MIM would be rather low, however, at ~230K USD.
+
+### Monitor CDP Caps on Abracadabra
+
+CDP caps on Abracadabra for minting new MIM should be constantly monitored when offering MIM binary puts.
+The possibility of new large loans being offered by Abracadabra increases the risk of this attack being executed profitably.
+
+### Price Insurance via Bonding Curve
+
+The Y2K premium pricing mechanism does not rely on a bonding curve. Therefore, there is no explicit slippage mechanism
+to deter larger players from buying greater pro-rata rights to the risk vault deposits in the event of a depeg. Increased
+slippage for greater size would deter this manipulation attack by eating into the Y2K portion of the payout in the PnL expression
+above. [The insurance pricing analysis](./insurance-pricing.md) goes into further detail for the Y2K premium pricing mechanisms.
+
