@@ -48,7 +48,7 @@ holders from [Etherscan's MIM Token page](https://etherscan.io/token/tokenholder
 are listed below:
 
 1. 472.016M in anyMIM contract
-2. 115.069M in a [“CauldronOwner” contract](https://etherscan.io/address/0x30b9de623c209a42ba8d5ca76384ead740be9529)
+2. 115.069M in a [CauldronOwner contract](https://etherscan.io/address/0x30b9de623c209a42ba8d5ca76384ead740be9529)
 3. 53.217M in [Curve Metapool with MIM and 3Crv](https://etherscan.io/address/0x5a6a4d54456819380173272a5e8e9b9904bdf41b)
 4. 30.724M in [Abracadabra Multisig](https://etherscan.io/address/0x5f0dee98360d8200b20812e174d139a1a633edd2)
 5. 5.892M in [Abracadabra Degenbox](https://etherscan.io/address/0xd96f48665a1410c0cd669a88898eca36b9fc2cce#code)
@@ -63,10 +63,70 @@ As the majority of the liquidity for MIM lies in the single Curve metapool,
 price discovery for MIM vs USD will likely happen through this pool. This
 is a significant risk for Y2K when offering markets on MIM, as price manipulation
 of this lone pool by a large MIM holder will likely be difficult to arbitrage
-back due to insignificant liquidity on other major DEXs and CEXs.
+back due to insignificant liquidity on other major DEXs and CEXs. This should also affect
+*any* oracle reporting MIM price due to the significant concentration of circulating supply
+in the Curve pool, regardless of the buffers put in place.
 
 
 ## Manipulating the Curve Pool to Trigger Depegs
+
+### Curve Math
+
+[Curve metapools](https://curve.readthedocs.io/exchange-deposits.html#metapool-deposits)
+are pools paired with an underlying base pool's LP token. In the case of MIM, the
+base pool is the Curve [3pool](https://curve.fi/#/ethereum/pools/3pool/swap)
+composed of DAI, USDC, and USDT.
+
+Some notes on Curve V1 pools are provided [here](https://curve.fi/#/ethereum/pools/3pool/swap)
+for context. The general takeaway is the Curve pool acts like a [superposition](https://www.desmos.com/calculator/zye4mzkim0)
+of a constant product pool $\prod_i x_i = (D / n)^n$ with a constant sum pool $\sum_i x_i = D$.
+
+The differences with constant product are most extreme near the equilibrium point of balanced reserves (i.e. price = 1),
+where the [marginal price curve](https://www.desmos.com/calculator/ox7d71h8ud)
+$P_{ij} = -dx_i / dx_j$ flattens out
+
+![StableSwap price chart](../assets/stableswap-price.png)
+
+The tradeoff made by the Curve pool is significantly less slippage when reserves are balanced,
+but extreme slippage once significant imbalance occurs (i.e. price goes to zero rapidly). This is
+easiest to see from the [marginal slippage chart](https://www.desmos.com/calculator/ruj2cgyfu1)
+$S_{ij} = -dP_{ij}/dx_j$
+
+![StableSwap slippage chart](../assets/stableswap-slippage.png)
+
+where slippage is near zero when balanced, but increases rapidly as imbalance occurs.
+
+### Attacking The Curve Pool
+
+An attacker could use the Curve MIM metapool to manipulate the price of MIM vs USD
+in their favor, so as to trigger a depeg event on the MIM Y2K binary put oracle.
+The oracle manipulation attack goes as follows:
+
+1. Purchase binary put via Y2K on MIM
+2. Wait until Y2K vault deposits close
+3. Mint MIM via Abracadabra CDP
+4. Sell MIM for USDC/USDT/DAI through the MIM Curve metapool
+5. Oracle reports price below strike `K` due to sell, triggering depeg event on Y2K
+6. Claim insurance payout via Y2K
+7. Sell USDC/USDT/DAI for MIM through same MIM Curve metapool
+8. Repay MIM loan from Abracadabra
+
+The PnL for this attack is
+
+```
+PnL for attack = Y2K payout - Y2K premium - Slippage on Curve
+```
+
+where the calculation for how much the attacker loses to slippage on Curve
+uses the context from the prior section.
+
+Note that this analysis will take a conservative approach and assume the worst-case
+scenario of the Chainlink oracle relaying price directly from the Curve pool (but no flashloan attacks),
+as Chainlink docs can be opaque w.r.t. MIM.
+
+### Cost of Attack
+
+
 
 
 ## Mitigating Curve Pool Attacks
