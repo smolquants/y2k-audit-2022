@@ -10,11 +10,11 @@ is in the MIM Curve metapool
 - Meaning, price discovery should occur solely through this lone pool, making it an easy target for price manipulation
 - An attacker could purchase a Y2K put on MIM, mint MIM through Abracadabra, sell into the Curve pool to trigger a depeg,
 collect on Y2K and repay the MIM loan
-- Upfront capital required to execute this attack is ~52M USD given current liquidity conditions on the MIM Curve metapool
+- Upfront capital to execute this attack requires a ~47M MIM mint, given current liquidity conditions on the MIM Curve metapool
 - Slippage lost on Curve, however, would only be ~230K USD
 - The attack is **not** currently possible due to borrow caps on Abracadabra being fully exhausted
 - Y2K should consider implementing caps on risk vault deposits at or near this Curve slippage loss amount
-to completely eliminate the profitability of this attack in the event Abracadabra increases new borrows in the future
+to completely eliminate the profitability of the attack in the event Abracadabra increases new borrows in the future
 
 
 ## Background
@@ -153,7 +153,7 @@ roughly shows the pool breaks below the Y2K strike price when MIM makes up ~96.5
 Cost of attack for manipulating the MIM Curve metapool is the minimum amount of upfront MIM capital needed
 to sell into the pool for the price on Curve to dip below the Y2K strike of `K=0.9759`.
 
-This can be found by inverting the marginal price function $x = P^{-1}(P)$ and taking the delta
+This can be found by inverting the marginal price function $x = P^{-1}(p)$ and taking the delta
 between the current price $P_0$ and the target strike price $K$
 
 ```math
@@ -188,16 +188,17 @@ Though, there are inherent risks in whether or not the Chainlink oracle relays t
 
 ## Mitigating Curve Pool Attacks
 
-Y2K MIM risk vaults currently have deposits [of > $2.258M](https://dune.com/queries/1503953/2532529), so this attack would be potentially profitable if not
+Y2K MIM risk vaults currently have deposits [of > $1.678M](https://dune.com/queries/1503953/2532529), so this attack would be potentially profitable if not
 for borrow caps on [Abracadabra](https://abracadabra.money/markets/) being fully exhausted.
 
-Mitigations for this attack that Y2K should consider are below.
+Mitigations that Y2K should consider are below.
 
 ### Caps on Y2K Risk Vault Deposits
 
 Caps on Y2K risk vault deposits as a function of current liquidity in the Curve pool would enforce PnL < 0 for this attack
-by limiting the maximum payout the attacker would receive from Y2K. Given current conditions,
-this risk vault cap on MIM would be rather low, however, at ~230K USD.
+by limiting the maximum payout the attacker would receive from Y2K. Conservatively, the cap should be set to the expected
+slippage loss on Curve when executing the attack. Given current conditions, this risk vault cap on MIM would
+be rather low, however, at ~230K USD.
 
 ### Monitor CDP Caps on Abracadabra
 
