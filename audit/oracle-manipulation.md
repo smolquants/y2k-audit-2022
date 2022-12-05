@@ -9,8 +9,8 @@ Oracle manipulation analysis.
 is in the MIM Curve metapool
 - Meaning, price discovery should occur solely through this lone pool, making it an easy target for price manipulation
 - An attacker could purchase a Y2K put on MIM, mint MIM through Abracadabra, sell into the Curve pool to trigger a depeg,
-collect on Y2K and repay the MIM loan
-- Upfront capital to execute this attack requires a ~47M MIM mint, given current liquidity conditions on the MIM Curve metapool
+collect on Y2K, swap back through the Curve pool and repay the MIM loan
+- Upfront capital to execute this attack requires a ~47M MIM mint, given current liquidity conditions
 - Slippage lost on Curve, however, would only be ~230K USD
 - The attack is **not** currently possible due to borrow caps on Abracadabra being fully exhausted
 - Y2K should consider implementing caps on risk vault deposits at or near this Curve slippage loss amount
