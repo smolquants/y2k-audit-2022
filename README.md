@@ -1,6 +1,9 @@
 # y2k-audit-2022-11
 
-Economic audit for Y2K
+Economic audit for Y2K.
+
+See [`audit/`](./audit/) for the full audit report.
+
 
 ## Replication
 

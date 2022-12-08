@@ -59,7 +59,7 @@ of the protocol.
 
 A two-player example to illustrate:
 
-- Seller deposits $1M of ETH in the risk vault ot underwrite the depeg insurance
+- Seller deposits $1M of ETH in the risk vault to underwrite the depeg insurance
 - Buyer deposits $0.01 of ETH in the hedge vault to buy the depeg insurance *on $1M payout*
 - If depeg occurs, buyer receives $1M and seller receives $0.01.
 
@@ -102,5 +102,8 @@ This is particularly the case given vault depositors *cannot* withdraw their cap
 
 
 ## Price Not Known at Time of Purchase
+
+
+## Recommendations for Pricing Mechanisms
 
 
