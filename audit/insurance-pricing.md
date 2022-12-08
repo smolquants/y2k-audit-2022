@@ -93,11 +93,11 @@ where
 - $\mathbb{1}\_{P_{T} \leq K}$ is the indicator function
 
 What Y2K vault depositors are trading when buying/selling the option $V(\tau)$ is the probability of
-the depeg event $\mathbb{P}_{Q}[P_{T} \leq K]$.
+the depeg event $\mathbb{P}\_{Q}[P_{T} \leq K]$.
 
 If sellers must honor an initial hedge vault depositor paying $B_0 \to 0$ with no other hedgers coming in after,
 sellers are forced into expressing the view that the probability of a depeg event occurring within the epoch must be zero
-$\mathbb{P}_{Q}[P_{T} \leq K] \to 0$, simply due to the initial hedge vault depositor bidding a low price of 0.
+$\mathbb{P}\_{Q}[P_{T} \leq K] \to 0$, simply due to the initial hedge vault depositor bidding a low price of 0.
 This is particularly the case given vault depositors *cannot* withdraw their capital once deposited during the deposit period.
 
 
