@@ -80,7 +80,7 @@ For simplicity, assume the puts are European (i.e. aren't triggered prior to exp
 can be expressed as the discounted expectation of the future payoff under the risk-neutral measure $Q$:
 
 ```math
-V(\tau) = S e^{-r \tau} \cdot \mathbb{E}^{Q}[\mathbb{1}_{P_{T} \leq K}] = S e^{-r \tau} \cdot \mathbb{P}^{Q}[P_{T} \leq K]
+V(\tau) = S e^{-r \tau} \cdot \mathbb{E}_{Q}[\mathbb{1}_{P_{T} \leq K}] = S e^{-r \tau} \cdot \mathbb{P}_{Q}[P_{T} \leq K]
 ```
 
 where
@@ -92,11 +92,13 @@ where
 - $S$ is the total collateral deposited in the risk vault
 - $\mathbb{1}\_{P_{T} \leq K}$ is the indicator function
 
-As mentioned in the Y2K whitepaper, what Y2K vault depositors are trading is the probability of
-the depeg event. If sellers are forced to honor an initial hedge vault depositor paying $B_0 \to 0$,
-sellers are forced into expressing the view that the probability of a depeg event occurring is zero
-$\mathbb{P}^{Q}[P_{T} \leq K] \to 0$, particularly given vault depositors *cannot* withdraw their capital once
-deposited during the deposit period.
+What Y2K vault depositors are trading when buying/selling the option $V(\tau)$ is the probability of
+the depeg event $\mathbb{P}_{Q}[P_{T} \leq K]$.
+
+If sellers must honor an initial hedge vault depositor paying $B_0 \to 0$ with no other hedgers coming in after,
+sellers are forced into expressing the view that the probability of a depeg event occurring within the epoch must be zero
+$\mathbb{P}_{Q}[P_{T} \leq K] \to 0$, simply due to the initial hedge vault depositor bidding a low price of 0.
+This is particularly the case given vault depositors *cannot* withdraw their capital once deposited during the deposit period.
 
 
 ## Price Not Known at Time of Purchase
