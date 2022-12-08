@@ -37,7 +37,7 @@ An example to illustrate:
 
  - Seller deposits $1M in risk vault to underwrite depeg insurance
  - Buyer deposits $0.01 in hedge vault to buy the associated depeg insurance *on $1M payout*
- - If depeg occurs, buyer receives $1M + $0.01 back. Seller loses entire principal.
+ - If depeg occurs, buyer receives $1M in payout. Seller loses entire principal for $0.01 in premiums.
 
 
 ## Oracles

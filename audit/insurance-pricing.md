@@ -29,9 +29,10 @@ Expressions for the rest of the insurance pricing mechanism analysis follow thos
 - $B = \sum_i B_i$ is the total premiums paid by hedge vault depositors
 - $S = \sum_j S_j$ is the total collateral posted by risk vault depositors
 
-Protocol fees are ignored for the sake of simplicity.
 
-Summary of the Y2K payout structure is below.
+### Payout Structure
+
+Protocol fees are ignored for the sake of simplicity. Summary of the Y2K payout structure is below.
 
 During the deposit phase,
 
@@ -41,16 +42,57 @@ During the deposit phase,
 If no depeg happens prior to expiry,
 
 - Buyer $i$ receives zero payout
-- Seller $j$ receives a pro-rata share of hedge vault premiums plus their original risk collateral back: $\frac{S_j}{S} \cdot B + S_j$
+- Seller $j$ receives a pro-rata share of hedge vault premiums plus their original risk collateral back: $(S_j / S) \cdot B + S_j$
 
 In the event of a depeg,
 
-- Buyer $i$ receives a pro-rata share of risk vault collateral: $\frac{B_i}{B} \cdot S$
-- Seller $j$ receives a pro-rata share of hedge vault premiums: $\frac{S_j}{S} \cdot B$
+- Buyer $i$ receives a pro-rata share of risk vault collateral: $(B_i / B) \cdot S$
+- Seller $j$ receives a pro-rata share of hedge vault premiums: $(S_j / S) \cdot B$
 
 
 ## Quoting the Put with Zero Hedgers
 
+There is a significant mispricing of risk when the vaults first open due to the manner in which price discovery happens on Y2K.
+The first buyer $i=0$ can bid whatever amount $B_0$ they want for the full rights to *all* of the collateral in the risk vault $S$
+in the event of a depeg. The initial round of sellers are forced to sell at this price chosen by the first bidder given the mechanics
+of the protocol.
+
+A two-player example to illustrate:
+
+- Seller deposits $1M of ETH in the risk vault ot underwrite the depeg insurance
+- Buyer deposits $0.01 of ETH in the hedge vault to buy the depeg insurance *on $1M payout*
+- If depeg occurs, buyer receives $1M and seller receives $0.01.
+
+As the first binary put buyer is able to specify their own price through depositing whatever amount $B_0$ they desire,
+the initial round of sellers depositing into the risk vault are effectively quoting the ask for the binary put at a
+price of $0$. It is unlikely risk sellers actually are pricing the binary put at this value.
+
+To prevent this scenario, sellers of the binary put should be able to specify an initial price
+they're willing to sell at, similar to the price specified when e.g. initializing a Uniswap pool.
+
+
+### Pricing the Binary Put
+
+To dig a bit deeper into what quoting the ask implies, note that pricing the binary put is effectively
+pricing the probability of a depeg event before expiry.
+
+For simplicity, assume the puts are European (i.e. aren't triggered prior to expiry) and there exist liquid
+futures/perp markets on the stablecoin v.s. USD pairs to use no-arbitrage arguments. The [market value for the binary put](https://en.wikipedia.org/wiki/Binary_option#Cash-or-nothing_put)
+under the risk-neutral measure $Q$ can be expressed as the discounted expectation of the future payoff:
+
+```math
+V(\tau) = S e^{-r \tau} \cdot \mathbb{E}^{Q}[\mathbb{1}_{P_{T} \leq K}] \\
+ =  S e^{-r \tau} \cdot \mathbb{P}^{Q}[P_{T} \leq K]
+```
+
+where
+
+- $P_t$ is the price of the underlying stablecoin v.s. USD at time $t$
+- $\tau$ is time to expiry
+- $T$ is expiry time
+- $r$ is the risk-free rate
+- $S$ is the total collateral deposited in the risk vault
+- $\mathbb{1}_{P_{T} \leq K}$ is the indicator function
 
 
 
