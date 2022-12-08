@@ -92,10 +92,10 @@ where
 - $S$ is the total collateral deposited in the risk vault
 - $\mathbb{1}\_{P_{T} \leq K}$ is the indicator function
 
-As mentioned in the Y2K WP, what Y2K vault depositors are effectively trading is the probability of
+As mentioned in the Y2K whitepaper, what Y2K vault depositors are trading is the probability of
 the depeg event. If sellers are forced to honor an initial hedge vault depositor paying $B_0 \to 0$,
-sellers are forced into expressing the view at the start of the deposit period that the probability of a
-depeg event occurring is zero $\mathbb{P}^{Q}[P_{T} \leq K]$, particularly given vault depositors *cannot* withdraw their capital once
+sellers are forced into expressing the view that the probability of a depeg event occurring is zero
+$\mathbb{P}^{Q}[P_{T} \leq K] \to 0$, particularly given vault depositors *cannot* withdraw their capital once
 deposited during the deposit period.
 
 
