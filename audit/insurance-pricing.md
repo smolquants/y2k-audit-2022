@@ -23,11 +23,30 @@ put on the stablecoin depeg.
 Once deposited, users are *not* able to withdraw their capital until either after expiry
 or once a depeg event is triggered (i.e. price goes below strike $K$).
 
-Expressions for the rest of the insurance pricing mechanism follow those of the
+Expressions for the rest of the insurance pricing mechanism analysis follow those of the
 [Y2K whitepaper](https://www.docdroid.net/7zgCd3R/y2k-whitepaper-pdf) with additions:
 
 - $B = \sum_i B_i$ is the total premiums paid by hedge vault depositors
 - $S = \sum_j S_j$ is the total collateral posted by risk vault depositors
+
+Protocol fees are ignored for the sake of simplicity.
+
+Summary of the Y2K payout structure is below.
+
+During the deposit phase,
+
+- Buyer $i$ pays $B_i$ in premiums by depositing to the hedge vault
+- Seller $j$ risks $S_j$ in collateral by depositing to the risk vault
+
+If no depeg happens prior to expiry,
+
+- Buyer $i$ receives zero payout
+- Seller $j$ receives a pro-rata share of hedge vault premiums plus their original risk collateral back: $\frac{S_j}{S} \cdot B + S_j$
+
+In the event of a depeg,
+
+- Buyer $i$ receives a pro-rata share of risk vault collateral: $\frac{B_i}{B} \cdot S$
+- Seller $j$ receives a pro-rata share of hedge vault premiums: $\frac{S_j}{S} \cdot B$
 
 
 ## Quoting the Put with Zero Hedgers
