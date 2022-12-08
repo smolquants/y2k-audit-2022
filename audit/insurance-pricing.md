@@ -76,13 +76,11 @@ they're willing to sell at, similar to the price specified when e.g. initializin
 To dig a bit deeper into what quoting the ask implies, note that pricing the binary put is effectively
 pricing the probability of a depeg event before expiry.
 
-For simplicity, assume the puts are European (i.e. aren't triggered prior to expiry) and there exist liquid
-futures/perp markets on the stablecoin v.s. USD pairs to use no-arbitrage arguments. The [market value for the binary put](https://en.wikipedia.org/wiki/Binary_option#Cash-or-nothing_put)
-under the risk-neutral measure $Q$ can be expressed as the discounted expectation of the future payoff:
+For simplicity, assume the puts are European (i.e. aren't triggered prior to expiry). The [market value for the binary put](https://en.wikipedia.org/wiki/Binary_option#Cash-or-nothing_put)
+can be expressed as the discounted expectation of the future payoff under the risk-neutral measure $Q$:
 
 ```math
-V(\tau) = S e^{-r \tau} \cdot \mathbb{E}^{Q}[\mathbb{1}_{P_{T} \leq K}] \\
- =  S e^{-r \tau} \cdot \mathbb{P}^{Q}[P_{T} \leq K]
+V(\tau) = S e^{-r \tau} \cdot \mathbb{E}^{Q}[\mathbb{1}_{P_{T} \leq K}] = S e^{-r \tau} \cdot \mathbb{P}^{Q}[P_{T} \leq K]
 ```
 
 where
@@ -92,8 +90,13 @@ where
 - $T$ is expiry time
 - $r$ is the risk-free rate
 - $S$ is the total collateral deposited in the risk vault
-- $\mathbb{1}_{P_{T} \leq K}$ is the indicator function
+- $\mathbb{1}\_{P_{T} \leq K}$ is the indicator function
 
+As mentioned in the Y2K WP, what Y2K vault depositors are effectively trading is the probability of
+the depeg event. If sellers are forced to honor an initial hedge vault depositor paying $B_0 \to 0$,
+sellers are forced into expressing the view at the start of the deposit period that the probability of a
+depeg event occurring is zero $\mathbb{P}^{Q}[P_{T} \leq K]$, particularly given vault depositors *cannot* withdraw their capital once
+deposited during the deposit period.
 
 
 ## Price Not Known at Time of Purchase
