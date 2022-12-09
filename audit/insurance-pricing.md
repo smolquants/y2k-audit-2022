@@ -116,21 +116,22 @@ A three-player example to illustrate:
 - If depeg occurs, buyer 1 receives $100K and buyer 2 receives $900K.
 - If buyer 2 had not purchased insurance after buyer 1, buyer 1 would have received $1M.
 
-This becomes a real problem in the event a trader used the purchased insurance as a hedge for a fixed
+This becomes a real problem when a trader uses the purchased insurance as a hedge for a fixed
 amount of stablecoins held in their portfolio, as the hedge has been significantly reduced due to demand
 from other buyers purchasing *after* them -- from $1M to $100K in the case of buyer 1 in the three-player example.
 
 Another way to realize this is by examining the pro-rata depeg event payout $(B_i/B) \cdot S$. Per-unit of risk vault
-collateral for the payout should be the number of contracts the buyer purchased of the binary put:
+collateral for the payout should be the number of contracts buyer $i$ purchased of the binary put:
 
 ```math
 \mathrm{OI} = \frac{B_i}{\sum_k B_k}
 ```
 
-The open interest of buyer $i$ decreases significantly the more insurance is purchased by other buyers after $i$.
-Ideally, $i$ should purchase a fixed amount of open interest/coverage tokens that represent a fixed portion of the claim
-on the total payout amount $S$. The initial purchase price for the option would need to be set higher than
-a starting ask of 0 for this to work (see prior issue).
+The sum $\sum_k B_k$ in the denominator of the open interest expression increases the more other buyers buy insurance.
+Therefore, the open interest of buyer $i$ decreases significantly the more insurance is purchased by other buyers after $i$.
+Ideally, $i$ should be able to purchase a fixed amount of open interest/coverage tokens that represent a fixed portion of the claim
+on the total payout amount $S$. The initial purchase price for the option would need to be set higher than a starting ask price
+of 0 for this to work (see prior issue).
 
 
 ## Recommendations for Pricing Mechanisms
