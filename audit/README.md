@@ -1,6 +1,6 @@
 # audit
 
-The Y2K economic audit is broken into two separate sections:
+The Y2K economic audit is broken into two sections:
 
 1. Oracle manipulation analysis in [oracle-manipulation.md](./oracle-manipulation.md)
 2. Insurance pricing mechanism analysis in [insurance-pricing.md](./insurance-pricing.md)

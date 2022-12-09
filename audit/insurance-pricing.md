@@ -101,7 +101,24 @@ $\mathbb{P}\_{Q}[P_{T} \leq K] \to 0$, simply due to the initial hedge vault dep
 This is particularly the case given vault depositors *cannot* withdraw their capital once deposited during the deposit period.
 
 
-## Price Not Known at Time of Purchase
+## Size Not Known at Time of Purchase
+
+The amount of insurance purchased (payout size) by the hedge vault depositor $i$ with $B_i$ of collateral is variable and depends on the other
+hedge buyers that may come in after the purchaser $k > i$ given the pro-rata payout structure. Therefore, the size the buyer is covered
+for is not actually known to the buyer at the time of purchase. Usually with insurance products (and options), the purchaser of the
+coverage buys the contracts for a known fixed coverage size.
+
+A three-player example to illustrate:
+
+- Seller deposits $1M of ETH in the risk vault to underwrite the depeg insurance
+- Buyer 1 deposits $10 of ETH in the hedge vault to buy depeg insurance
+- Buyer 2 deposits $90 of ETH in the hedge vault after buyer 1 to also buy depeg insurance
+- If depeg occurs, buyer 1 receives $100K and buyer 2 receives $900K.
+- If buyer 2 had not purchased insurance after buyer 1, buyer 1 would have received $1M.
+
+This becomes a real problem in the event a trader used the purchased insurance as a hedge for a fixed
+amount of stablecoins held in their portfolio, as the hedge has been significantly reduced due to demand
+from other buyers purchasing *after* them -- from $1M to $100K in the case of buyer 1 in the three-player example.
 
 
 ## Recommendations for Pricing Mechanisms
@@ -115,7 +132,7 @@ the derivative token separately from the act of actually selling the option to b
 the minted option token on Uniswap vs ETH. The derivative vs ETH Uniswap pool is initialized with a suitable initial price by the first minters.
 
 A possible alternative to the Squeeth approach of piggybacking on Uniswap to make a market for the binary put would be a specialized Y2K AMM
-for the binary option. Risk vault depositors would collateralize and mint the derivative token, then subsequently provide liquidity vs ETH
+for the binary option. Risk vault depositors would collateralize and mint the derivative token for a given fixed size, then subsequently provide liquidity vs ETH
 to the specialized AMM for buyers to then purchase insurance from the liquidity pool (eliminates the hedge vault).
 The Y2k price curve should ultimately look similar in shape to the expected CDF (bound between 0 and 1 per unit of risk vault collateral), as this is what
 traders are trading. Pool initializers must also be able to set a suitable initial price at pool deployment.
