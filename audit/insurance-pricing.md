@@ -106,4 +106,16 @@ This is particularly the case given vault depositors *cannot* withdraw their cap
 
 ## Recommendations for Pricing Mechanisms
 
+Consider relying on an AMM with a price curve for the next iteration of the protocol. Y2K does currently
+enable price discovery for the binary puts during the deposit period, but it's difficult to overcome the issues above
+when taking the current pro-rata approach to price discovery.
 
+A helpful reference example may be the [Squeeth approach](https://github.com/opynfinance/squeeth-monorepo), where option sellers collateralize and mint
+the derivative token separately from the act of actually selling the option to buyers. Instead, selling occurs through sellers providing liquidity for
+the minted option token on Uniswap vs ETH. The derivative vs ETH Uniswap pool is initialized with a suitable initial price by the first minters.
+
+A possible alternative to the Squeeth approach of piggybacking on Uniswap to make a market for the binary put would be a specialized Y2K AMM
+for the binary option. Risk vault depositors would collateralize and mint the derivative token, then subsequently provide liquidity vs ETH
+to the specialized AMM for buyers to then purchase insurance from the liquidity pool (eliminates the hedge vault).
+The Y2k price curve should ultimately look similar in shape to the expected CDF (bound between 0 and 1 per unit of risk vault collateral), as this is what
+traders are trading. Pool initializers must also be able to set a suitable initial price at pool deployment.
