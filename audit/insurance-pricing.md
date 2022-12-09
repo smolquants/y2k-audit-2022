@@ -3,6 +3,17 @@
 Insurance pricing mechanism analysis.
 
 
+## TL;DR
+
+- The pro-rata payout structure of the Y2K binary put causes issues from a price discovery and contract size perspective
+- Risk vault depositors are effectively quoting an ask price of 0 (accept any price from hedgers) at the start of the deposit
+period, when no hedgers have bought insurance yet
+- Hedge vault depositors do not know how much size they are actually covered for at time of purchase, which is an issue if
+hedgers are using the insurance as a hedge on a fixed stablecoin portfolio size
+- Y2K should consider implementing a binary option AMM for price discovery, where minters of the risk token (binary put) provide
+liquidity post-mint and hedgers simply buy the newly minted token from the AMM
+
+
 ## Background
 
 Y2K currently offers binary option markets on depeg events for the stablecoins
