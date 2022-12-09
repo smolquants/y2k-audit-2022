@@ -131,7 +131,7 @@ The sum $\sum_k B_k$ in the denominator of the open interest expression increase
 Therefore, the open interest of buyer $i$ decreases significantly the more insurance is purchased by other buyers after $i$.
 Ideally, $i$ should be able to purchase a fixed amount of open interest/coverage tokens that represent a fixed portion of the claim
 on the total payout amount $S$. The initial purchase price for the option would need to be set higher than a starting ask price
-of 0 for this to work (see prior issue).
+of 0 for this to work (see [Quoting the Put with Zero Hedgers](#quoting-the-put-with-zero-hedgers)).
 
 
 ## Recommendations for Pricing Mechanisms
