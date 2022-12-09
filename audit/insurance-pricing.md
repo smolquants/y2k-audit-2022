@@ -120,6 +120,18 @@ This becomes a real problem in the event a trader used the purchased insurance a
 amount of stablecoins held in their portfolio, as the hedge has been significantly reduced due to demand
 from other buyers purchasing *after* them -- from $1M to $100K in the case of buyer 1 in the three-player example.
 
+Another way to realize this is by examining the pro-rata depeg event payout $(B_i/B) \cdot S$. Per-unit of risk vault
+collateral for the payout should be the number of contracts the buyer purchased of the binary put:
+
+```math
+\mathrm{OI} = \frac{B_i}{\sum_k B_k}
+```
+
+The open interest of buyer $i$ decreases significantly the more insurance is purchased by other buyers after $i$.
+Ideally, $i$ should purchase a fixed amount of open interest/coverage tokens that represent a fixed portion of the claim
+on the total payout amount $S$. The initial purchase price for the option would need to be set higher than
+a starting ask of 0 for this to work (see prior issue).
+
 
 ## Recommendations for Pricing Mechanisms
 
