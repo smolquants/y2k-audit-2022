@@ -11,7 +11,7 @@ period, when no hedgers have bought insurance yet
 - Hedge vault depositors do not know how much size they are actually covered for at time of purchase, which is an issue if
 hedgers are using the insurance as a hedge on a fixed stablecoin portfolio size
 - Y2K should consider implementing a binary option AMM for price discovery, where minters of the risk token (binary put) provide
-liquidity post-mint and hedgers simply buy the newly minted token from the AMM
+liquidity post-mint and hedgers buy the newly minted token from the AMM
 
 
 ## Background
@@ -28,7 +28,7 @@ paired against USD, with strike `K` specified for each market.
 
 The protocol has two sets of vaults, hedge and risk, that buyers and sellers
 of the option, respectively, can deposit capital into during an initial deposit period.
-This deposit phase is where price discovery happens for the value of the Y2K binary
+The deposit phase is where price discovery happens for the value of the Y2K binary
 put on the stablecoin depeg.
 
 Once deposited, users are *not* able to withdraw their capital until either after expiry
