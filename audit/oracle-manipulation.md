@@ -183,7 +183,7 @@ As of 2022-12-04,
 - **~230K MIM is lost to slippage** from executing the attack
 
 Any payout from Y2K less fees and premium that is greater than ~230k USD will make this attack worthwhile to try.
-Though, there are inherent risks in whether or not the Chainlink oracle relays the price post-swap as well as arbs.
+Though, there are inherent risks in whether or not the Chainlink oracle relays the price post-swap.
 
 
 ## Mitigating Curve Pool Attacks
