@@ -10,3 +10,5 @@ pool to intentionally trigger depeg events on Y2K.
 
 The second section focuses on the current insurance pricing mechanisms implemented by the protocol.
 It dives deeper into ways to improve pricing to mitigate the issues mentioned.
+
+Full audit report compiled into PDF format in [audit.pdf](./audit.pdf).

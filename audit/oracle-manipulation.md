@@ -83,7 +83,7 @@ in the Curve pool, regardless of the buffers put in place.
 
 **NOTE:** The analysis around Curve pool manipulation below will take a conservative approach and assume the worst-case
 scenario of the Chainlink oracle relaying price directly from the Curve pool (but no flashloan attacks),
-as Chainlink docs can be opaque w.r.t. MIM.
+as Chainlink docs can be somewhat opaque with respect to the MIM feed.
 
 
 ## Manipulating the Curve Pool to Trigger Depegs
